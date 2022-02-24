@@ -8,30 +8,70 @@ Model and tooling for [General Transit Feed Specification (GTFS)]() data.
 
 ## Getting started
 
-run (e.g.):
+### Using the CLI tool
+
+Get, build and install the `gtfs` binary by running:
 
 ~~~~
-make import
+go install github.com/heimdalr/gtfs/cmd/gtfs@latest
 ~~~~
 
-to:
+If all goes well, the above installed `~/go/bin/gtfs`. 
 
-1. build the cli tool `./cmd/gtfs/gtfs`
-2. download and extract [VBB GTFS data](https://www.vbb.de/vbb-services/api-open-data/datensaetze/) into `./vbb/`, and 
-3. import the VBB GTFS data into the SQLite DB `./vbb.db`.
-
-Then, mangle the DB using this package / model (`./gtfs.go`) with (e.g.) [GORM](https://gorm.io/).
-
-## The CLI tool
-
-to build (if not yet done) via: 
+Now download and extract (e.g.) the [VBB GTFS data](https://www.vbb.de/vbb-services/api-open-data/datensaetze/) to `./vbb/`
+by running:
 
 ~~~~
-make cmd/gtfs/gtfs
+mkdir ./vbb
+cd ./vbb 
+wget https://www.vbb.de/fileadmin/user_upload/VBB/Dokumente/API-Datensaetze/gtfs-mastscharf/GTFS.zip
+unzip GTFS.zip
 ~~~~
 
-and run (e.g.): 
+Finally, run: 
 
 ~~~~
-./cmd/gtfs/gtfs --help
+gtfs import ./vbb ./vbb.db
 ~~~~
+
+to import the VBB GTFS CSV files within `./vbb/` into the SQLite DB file `./vbb.db`.
+
+### Using the Model
+
+   
+Now, using this package on the DB we populated in the previous step, we may build and run the following: 
+
+~~~~
+package main
+
+import (
+	"fmt"
+	"github.com/heimdalr/gtfs"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+)
+
+func main() {
+
+	const dbPath = "vbb.db"
+
+	// open the DB
+	db, _ := gorm.Open(sqlite.Open(dbPath), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Error),
+	})
+
+	// SELECT * FROM agencies WHERE id = 1;
+	agency := gtfs.Agency{}
+	db.First(&agency, "id = ?", 1)
+	fmt.Println(agency)
+}
+
+~~~~
+
+to query for the agency with the ID "1":
+
+~~~~
+{1 S-Bahn Berlin GmbH https://sbahn.berlin/}
+~~~~
+
