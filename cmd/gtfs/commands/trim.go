@@ -3,11 +3,11 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"github.com/heimdalr/gtfs"
 	"github.com/spf13/cobra"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"heimdalr/gtfs"
 	"log"
 	"strings"
 	"time"

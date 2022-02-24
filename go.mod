@@ -1,4 +1,4 @@
-module heimdalr/gtfs
+module github.com/heimdalr/gtfs
 
 go 1.17
 

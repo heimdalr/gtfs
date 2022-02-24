@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"heimdalr/gtfs/cmd/gtfs/commands"
+	"github.com/heimdalr/gtfs/cmd/gtfs/commands"
 	"os"
 )
 
