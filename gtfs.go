@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// DateTime is used to represent GTFS times (hh:mm) (in the DB) as seconds since midnight.
 type DateTime struct {
 	int32
 }

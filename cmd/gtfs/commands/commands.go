@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// NewRootCmd initializes the root command.
 func NewRootCmd(buildVersion, buildGitHash string) *cobra.Command {
 
 	gtfsTrimCmd := &cobra.Command{
