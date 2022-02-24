@@ -51,7 +51,7 @@ cmd/gtfs/gtfs: $(GO_FILES)
 	go build \
 	-ldflags $(LD_FLAGS) \
 	-o $@ \
-	heimdalr/gtfs/cmd/gtfs
+	github.com/heimdalr/gtfs/cmd/gtfs
 
 # import VBB data into SQLite DB
 import: cmd/gtfs/gtfs $(VBB_DIR)
