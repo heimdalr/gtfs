@@ -161,12 +161,6 @@ type CalendarDate struct {
 	ExceptionType int    `csv:"exception_type"`
 }
 
-type RouteStop struct {
-	StopID    string
-	RouteID   string
-	Direction string
-}
-
 // ItemType enumerates different item types.
 type ItemType uint32
 
