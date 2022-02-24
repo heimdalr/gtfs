@@ -20,10 +20,10 @@ make import
 to:
 
 1. build the cli tool `./cmd/gtfs/gtfs`
-2. download and extract [VBB GTFS data](https://www.vbb.de/vbb-services/api-open-data/datensaetze/) into `./vbb/`, and, 
-3. finally, import the VBB GTFS data into the SQLite DB `./vbb.db`.
+2. download and extract [VBB GTFS data](https://www.vbb.de/vbb-services/api-open-data/datensaetze/) into `./vbb/`, and 
+3. import the VBB GTFS data into the SQLite DB `./vbb.db`.
 
-Then, mangle the DB using the model (`./gtfs.go`) with (e.g.) [GORM](https://gorm.io/).
+Then, mangle the DB using this package / model (`./gtfs.go`) with (e.g.) [GORM](https://gorm.io/).
 
 ### The CLI tool
 
