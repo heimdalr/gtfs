@@ -110,8 +110,6 @@ func (tr trimResult) String() string {
 	return sb.String()
 }
 
-var ()
-
 func gtfsTrim(_ *cobra.Command, args []string) error {
 	dbPath := args[0]
 	agency := args[1]

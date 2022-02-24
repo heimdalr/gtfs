@@ -25,7 +25,7 @@ to:
 
 Then, mangle the DB using this package / model (`./gtfs.go`) with (e.g.) [GORM](https://gorm.io/).
 
-### The CLI tool
+## The CLI tool
 
 to build (if not yet done) via: 
 
