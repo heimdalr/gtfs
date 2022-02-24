@@ -1,11 +1,8 @@
 # gtfs
 
-<!--
-[![run tests](https://github.com/heimdalr/dag/workflows/Run%20Tests/badge.svg?branch=master)](https://github.com/heimdalr/dag/actions?query=branch%3Amaster)
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/heimdalr/dag)](https://pkg.go.dev/github.com/heimdalr/dag)
-[![Go Report Card](https://goreportcard.com/badge/github.com/heimdalr/dag)](https://goreportcard.com/report/github.com/heimdalr/dag)
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/heimdalr/dag)
--->
+[![Test](https://github.com/heimdalr/gtfs/actions/workflows/test.yml/badge.svg)](https://github.com/heimdalr/gtfs/actions/workflows/test.yml)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/heimdalr/gtfs)](https://pkg.go.dev/github.com/heimdalr/gtfs)
+[![Go Report Card](https://goreportcard.com/badge/github.com/heimdalr/gtfs)](https://goreportcard.com/report/github.com/heimdalr/gtfs)
 
 Model and tooling for [General Transit Feed Specification (GTFS)]() data.
 
