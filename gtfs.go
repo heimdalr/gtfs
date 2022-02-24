@@ -11,15 +11,15 @@ import (
 
 // DateTime is used to represent GTFS times (hh:mm) (in the DB) as seconds since midnight.
 type DateTime struct {
-	int32
+	Int32 int32
 }
 
 // MarshalCSV marshals DateTime to CSV (i.e. when writing to CSV).
 func (dt *DateTime) MarshalCSV() (string, error) {
 
-	hours := dt.int32 / 3600
-	minutes := (dt.int32 % 3600) / 60
-	seconds := (dt.int32 % 3600) % 60
+	hours := dt.Int32 / 3600
+	minutes := (dt.Int32 % 3600) / 60
+	seconds := (dt.Int32 % 3600) % 60
 	return fmt.Sprintf("%02d:%02d:%02d", hours, minutes, seconds), nil
 }
 
@@ -45,7 +45,7 @@ func (dt *DateTime) UnmarshalCSV(csv string) error {
 	if i > math.MaxInt32 {
 		return fmt.Errorf("cannot parse GTFS time from '%s': max value exceeded", csv)
 	}
-	dt.int32 = int32(i)
+	dt.Int32 = int32(i)
 	return nil
 }
 
@@ -58,13 +58,13 @@ func (dt *DateTime) Scan(value interface{}) error {
 	if i > math.MaxInt32 {
 		return fmt.Errorf("cannot scan '%v' to GTFS Tim: max value exceeded", value)
 	}
-	dt.int32 = int32(i)
+	dt.Int32 = int32(i)
 	return nil
 }
 
 // Value converts from DateTime to DB.
 func (dt DateTime) Value() (driver.Value, error) {
-	return int64(dt.int32), nil
+	return int64(dt.Int32), nil
 }
 
 // Agency model.

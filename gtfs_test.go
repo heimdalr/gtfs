@@ -1,6 +1,9 @@
-package gtfs
+package gtfs_test
 
-import "testing"
+import (
+	"github.com/heimdalr/gtfs"
+	"testing"
+)
 
 func TestGTFSDateTime_UnmarshalCSV(t *testing.T) {
 
@@ -30,15 +33,15 @@ func TestGTFSDateTime_UnmarshalCSV(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var dt DateTime
+			var dt gtfs.DateTime
 			err := dt.UnmarshalCSV(tt.csv)
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("UnmarshalCSV() error = %v, wantErr %v", err, tt.wantErr)
 				}
 			} else {
-				if dt.int32 != tt.dt {
-					t.Errorf("UnmarshalCSV() got %d, want %d", dt.int32, tt.dt)
+				if dt.Int32 != tt.dt {
+					t.Errorf("UnmarshalCSV() got %d, want %d", dt.Int32, tt.dt)
 				}
 			}
 		})
@@ -73,7 +76,7 @@ func TestGTFSDateTime_MarshalCSV(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			dt := DateTime{tt.dt}
+			dt := gtfs.DateTime{Int32: tt.dt}
 			csv, err := dt.MarshalCSV()
 			if tt.wantErr {
 				if err == nil {
