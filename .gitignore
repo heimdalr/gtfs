@@ -1,6 +1,4 @@
 /.idea/
 /vbb/
 /vbb.db
-/cmd/import/import
-/cmd/trim/trim
-
+/cmd/gtfs/gtfs

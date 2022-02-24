@@ -35,16 +35,6 @@ func (iir importResult) String() string {
 	return fmt.Sprintf("imported %d %s in %d batches in %s", iir.Count, iir.ItemType, iir.Batches, iir.Time)
 }
 
-var (
-	gtfsImportCmd = &cobra.Command{
-		Use:   "import <gtfsBasePath> <dbPath>",
-		Short: "import GTFS data files into an SQLite DB",
-		Long:  ``,
-		RunE:  gtfsImport,
-		Args:  cobra.ExactArgs(2),
-	}
-)
-
 func gtfsImport(_ *cobra.Command, args []string) error {
 
 	gtfsBasePath := args[0]
@@ -193,7 +183,7 @@ func importSingle(csvPath string, db *gorm.DB, importType gtfs.ItemType) *import
 	r := <-resultChan
 
 	// compute the elapsed Time
-	r.Time = time.Now().Sub(start)
+	r.Time = time.Since(start)
 
 	return r
 }

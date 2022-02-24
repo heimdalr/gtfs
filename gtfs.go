@@ -2,7 +2,6 @@ package gtfs
 
 import (
 	"database/sql/driver"
-	"errors"
 	"fmt"
 	"gorm.io/gorm"
 	"math"
@@ -27,7 +26,7 @@ func (dt *DateTime) MarshalCSV() (string, error) {
 func (dt *DateTime) UnmarshalCSV(csv string) error {
 	s := strings.Split(csv, ":")
 	if len(s) != 3 {
-		return errors.New(fmt.Sprintf("cannot parse GTFS Time from '%s'", csv))
+		return fmt.Errorf("cannot parse GTFS Time from '%s'", csv)
 	}
 	hours, err := strconv.Atoi(s[0])
 	if err != nil {

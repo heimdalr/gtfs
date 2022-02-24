@@ -85,24 +85,24 @@ WHERE
 `
 )
 
-// TrimItemsResult is the type used to describe the result of trimming a single item type.
-type TrimItemsResult struct {
+// trimItemsResult is the type used to describe the result of trimming a single item type.
+type trimItemsResult struct {
 	ItemType  gtfs.ItemType
 	Affected  int64
 	Remaining int64
 	Time      time.Duration
 }
 
-// String returns a human-readable representation of TrimItemsResult.
-func (tir TrimItemsResult) String() string {
+// String returns a human-readable representation of trimItemsResult.
+func (tir trimItemsResult) String() string {
 	return fmt.Sprintf("trimed %d %s to %d in %s", tir.Affected, tir.ItemType, tir.Remaining, tir.Time)
 }
 
-// TrimResult is the type used to describe the result of trimming all item types.
-type TrimResult map[gtfs.ItemType]*TrimItemsResult
+// trimResult is the type used to describe the result of trimming all item types.
+type trimResult map[gtfs.ItemType]*trimItemsResult
 
-// String returns a human-readable representation of TrimResult.
-func (tr TrimResult) String() string {
+// String returns a human-readable representation of trimResult.
+func (tr trimResult) String() string {
 	var sb strings.Builder
 	for _, trimItemsResult := range tr {
 		sb.WriteString(fmt.Sprintf("%s\n", trimItemsResult))
@@ -110,15 +110,7 @@ func (tr TrimResult) String() string {
 	return sb.String()
 }
 
-var (
-	gtfsTrimCmd = &cobra.Command{
-		Use:   "trim <dbPath> <agency>",
-		Short: "trim a GTFS DB to a single agency",
-		Long:  ``,
-		RunE:  gtfsTrim,
-		Args:  cobra.ExactArgs(2),
-	}
-)
+var ()
 
 func gtfsTrim(_ *cobra.Command, args []string) error {
 	dbPath := args[0]
@@ -147,7 +139,7 @@ func gtfsTrim(_ *cobra.Command, args []string) error {
 	}
 
 	// trim to agency
-	trimResult, errTrim := trim(db, agency)
+	r, errTrim := trim(db, agency)
 	if errTrim != nil {
 		if errors.Is(errTrim, gorm.ErrRecordNotFound) {
 			log.Println(fmt.Sprintf("could not find an agency like '%s', not trimming", agency))
@@ -155,14 +147,14 @@ func gtfsTrim(_ *cobra.Command, args []string) error {
 			return fmt.Errorf("failed to trim DB: %w", errTrim)
 		}
 	}
-	log.Println(trimResult.String())
+	log.Println(r.String())
 
 	return nil
 }
 
 // trim removes all items from the DB that are not associated with the agency
 // that matches like. After completion, trim returns some stats.
-func trim(db *gorm.DB, like string) (*TrimResult, error) {
+func trim(db *gorm.DB, like string) (*trimResult, error) {
 
 	// ensure all necessary tables are available for stripping
 	requiredTables := []string{"agencies", "routes", "trips", "stop_times", "stops", "shapes", "calendars", "calendar_dates"}
@@ -195,7 +187,7 @@ func trim(db *gorm.DB, like string) (*TrimResult, error) {
 	}
 
 	// execute each of the statements
-	trimResult := TrimResult{}
+	trimResult := trimResult{}
 	for _, c := range config {
 
 		start := time.Now()
@@ -203,10 +195,10 @@ func trim(db *gorm.DB, like string) (*TrimResult, error) {
 		if tx.Error != nil {
 			return nil, fmt.Errorf("failed to trim %s: %w", c.itemType, tx.Error)
 		}
-		trimItemsResult := TrimItemsResult{
+		trimItemsResult := trimItemsResult{
 			ItemType: c.itemType,
 			Affected: tx.RowsAffected,
-			Time:     time.Now().Sub(start),
+			Time:     time.Since(start),
 		}
 		db.Table(c.tblName).Count(&trimItemsResult.Remaining)
 		trimResult[c.itemType] = &trimItemsResult

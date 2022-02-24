@@ -1,22 +1,47 @@
 package commands
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/spf13/cobra"
+	"log"
+)
 
-var (
-	rootCmd = &cobra.Command{
+func NewRootCmd(buildVersion, buildGitHash string) *cobra.Command {
+
+	gtfsTrimCmd := &cobra.Command{
+		Use:   "trim <dbPath> <agency>",
+		Short: "Trim a GTFS DB to a single agency",
+		Long:  ``,
+		RunE:  gtfsTrim,
+		Args:  cobra.ExactArgs(2),
+	}
+
+	gtfsImportCmd := &cobra.Command{
+		Use:   "import <gtfsBasePath> <dbPath>",
+		Short: "Import GTFS data files into an SQLite DB",
+		Long:  ``,
+		RunE:  gtfsImport,
+		Args:  cobra.ExactArgs(2),
+	}
+
+	gtfsVersionCmd := &cobra.Command{
+		Use:   "version",
+		Short: "Get program version",
+		Long:  ``,
+		Run: func(_ *cobra.Command, _ []string) {
+			log.Printf("version: %s hash: %s", buildVersion, buildGitHash)
+		},
+	}
+
+	rootCmd := &cobra.Command{
 		Use:           "gtfs",
-		Short:         "gtfs - command line tool",
+		Short:         "gtfs - GTFS command line tool",
 		Long:          ``,
 		SilenceErrors: true,
 		SilenceUsage:  true,
 	}
-)
-
-func init() {
 	rootCmd.AddCommand(gtfsImportCmd)
 	rootCmd.AddCommand(gtfsTrimCmd)
-}
+	rootCmd.AddCommand(gtfsVersionCmd)
 
-func Execute() error {
-	return rootCmd.Execute()
+	return rootCmd
 }

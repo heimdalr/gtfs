@@ -22,8 +22,8 @@ VBB_ZIP_URL := https://www.vbb.de/fileadmin/user_upload/VBB/Dokumente/API-Datens
 VBB_DATA_DIR := vbb
 VBB_DB_FILE := vbb.db
 
-GO_FILES := $(wildcard cmd/import/*.go cmd/trim/*.go *.go)
-BIN_FILES := cmd/import/import cmd/trim/trim
+GO_FILES := $(wildcard cmd/gtfs/main.go cmd/gtfs/commands/*.go *.go)
+BIN_FILES := cmd/gtfs/gtfs
 
 all: $(BIN_FILES)
 
@@ -46,27 +46,20 @@ vbb:
 	rm -f $(VBB_DATA_DIR)/*
 	cd $(VBB_DATA_DIR) && wget $(VBB_ZIP_URL) && unzip GTFS.zip
 
-# build the import tool
-cmd/import/import: $(GO_FILES)
+# build the gtfs cmd
+cmd/gtfs/gtfs: $(GO_FILES)
 	go build \
 	-ldflags $(LD_FLAGS) \
 	-o $@ \
-	heimdalr/gtfs/cmd/import
+	heimdalr/gtfs/cmd/gtfs
 
 # import VBB data into SQLite DB
-import: cmd/import/import $(VBB_DIR)
-	$< $(VBB_DATA_DIR) $(VBB_DB_FILE)
-
-# build the trim tool
-cmd/trim/trim: $(GO_FILES)
-	go build \
-	-ldflags $(LD_FLAGS) \
-	-o $@ \
-	heimdalr/gtfs/cmd/trim
+import: cmd/gtfs/gtfs $(VBB_DIR)
+	$< import $(VBB_DATA_DIR) $(VBB_DB_FILE)
 
 # trim DB to "S-Bahn Berlin GmbH"-agency
-trim: cmd/trim/trim $(VBB_DB_FILE)
-	$< $(VBB_DB_FILE) "S-Bahn"
+trim: cmd/gtfs/gtfs $(VBB_DB_FILE)
+	$< trim $(VBB_DB_FILE) "S-Bahn"
 
 clean:
 	rm -f $(BIN_FILES)
