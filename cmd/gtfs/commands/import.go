@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/gocarina/gocsv"
@@ -66,6 +67,16 @@ func gtfsImport(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+
+	// close the DB at last
+	var sqlDB *sql.DB
+	sqlDB, err = db.DB()
+	if err != nil {
+		return err
+	}
+	defer func(sqlDB *sql.DB) {
+		_ = sqlDB.Close()
+	}(sqlDB)
 
 	// ensure tables matching our model
 	err = gtfs.Migrate(db)

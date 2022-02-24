@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/heimdalr/gtfs"
@@ -130,6 +131,16 @@ func gtfsTrim(_ *cobra.Command, args []string) error {
 		return err
 	}
 
+	// close the DB at last
+	var sqlDB *sql.DB
+	sqlDB, err = db.DB()
+	if err != nil {
+		return err
+	}
+	defer func(sqlDB *sql.DB) {
+		_ = sqlDB.Close()
+	}(sqlDB)
+
 	// ensure tables matching our model
 	err = gtfs.Migrate(db)
 	if err != nil {
@@ -201,6 +212,12 @@ func trim(db *gorm.DB, like string) (*trimResult, error) {
 		db.Table(c.tblName).Count(&trimItemsResult.Remaining)
 		trimResult[c.itemType] = &trimItemsResult
 
+	}
+
+	// vacuum
+	tx = db.Exec("vacuum")
+	if tx.Error != nil {
+		return nil, fmt.Errorf("failed to vacuum: %w", tx.Error)
 	}
 
 	return &trimResult, nil
